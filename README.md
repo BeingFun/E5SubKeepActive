@@ -1,6 +1,6 @@
 # E5_Subscription_AutoActive
 
-基于 Microsoft Graph REST API 自动调用 OneDrive 相关 API 请求,模拟开发者活动以续订微软E5开发者账号
+基于 HTTP 自动调用 OneDrive 相关 API 请求,模拟开发者活动以续订微软E5开发者账号
 
 ## 使用说明
 
