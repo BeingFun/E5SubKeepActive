@@ -17,8 +17,10 @@ scopes = ["offline_access", "Files.Read", "Files.Read.All",
 
 # 微软账号授权代码
 authorization_code = None
-# 令牌根节点
+# 多租户或个人账号令牌根节点
 access_token_url = "https://login.microsoftonline.com/common/oauth2/v2.0/token?"
+# 多租户或个人账号鉴权根节点
+access_authorize_url = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?"
 # 授权令牌
 token = None
 
@@ -43,7 +45,7 @@ class Authorization:
         if token is None:
             # step 1.1 获取授权代码
             print("get authorization code...")
-            authorization_url = f"https://login.microsoftonline.com/{config.user_setting.tenant_id}/oauth2/v2.0/authorize?" \
+            authorization_url = f"{access_authorize_url}" \
                                 f"&client_id={config.user_setting.client_id}" \
                                 f"&response_type={response_type}" \
                                 f"&scope={Authorization.get_scope()}" \
@@ -57,12 +59,12 @@ class Authorization:
                 time.sleep(5)
             # step 1.2 用授权代码获取访问令牌
             print("get access token...")
-            scope = ["User.Read"]
+            global scopes
             authorization_code_body = {
                 "tenant": config.user_setting.tenant_id,
                 "client_id": config.user_setting.client_id,
                 "grant_type": "authorization_code",
-                "scope": scope,
+                "scope": scopes,
                 "code": authorization_code,
                 "redirect_uri": redirect_uri,
                 "client_secret": config.user_setting.client_secret,

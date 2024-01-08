@@ -21,14 +21,16 @@ lock = threading.Lock()
 def receive_redirect():
     # 获取重定向中的参数
     code = request.args.get('code')
-    # 使用锁确保线程安全
-    with lock:
-        # 在这里可以处理收到的参数
-        if code is not None:
-            authorization.authorization_code = code
-        time.sleep(5)
-    # 返回响应
-    return "已经正常接收到应用授权码，现在你可以关闭浏览器窗口了"
+    while True:
+        # 使用锁确保线程安全
+        with lock:
+            # 在这里可以处理收到的参数
+            if code is not None:
+                authorization.authorization_code = code
+                # 返回响应
+                return "已经正常接收到应用授权码，现在你可以关闭浏览器窗口了"
+            time.sleep(5)
+
 
 
 def call_onedrive_api():
