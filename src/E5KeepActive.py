@@ -8,7 +8,7 @@ import authorization
 from flask import Flask, request
 
 from src.constants.constants import ROOT_PATH
-from src.drive import OneDrive, threshold_size
+from src.drive import OneDrive
 from src.startwithsys import WithSysInit
 from src.util.config_init import ConfigInit
 
@@ -32,29 +32,30 @@ def receive_redirect():
             time.sleep(5)
 
 
-
 def call_onedrive_api():
     print("start call onedrive api...")
-    # 获取根目录
-    if not OneDrive.check_exist_item(item_id="root", filename="E5KeepActive"):
-        OneDrive.create_folder("root", "E5KeepActive")
-    # get E5KeepActive id
-    folder_id = OneDrive.get_item_id("E5KeepActive")
-    if not OneDrive.check_exist_item(item_id=folder_id, filename="E5KeepActive.log"):
-        OneDrive.create_file("root:/E5KeepActive", "E5KeepActive.log")
+    # 创建文件 root:Apps/E5KeepActive/E5KeepActive.log
+    OneDrive.create_folder("root", "Apps")
+    OneDrive.create_folder("root:/Apps", "E5KeepActive")
+    OneDrive.create_file("root:/Apps/E5KeepActive", "E5KeepActive.log")
+
     # get content
-    log_id = OneDrive.get_item_id("E5KeepActive/E5KeepActive.log")
-    if OneDrive.get_item_size(log_id) >= threshold_size:
+    log_id = OneDrive.get_item_id("root:/Apps/E5KeepActive/E5KeepActive.log")
+    if OneDrive.get_item_size(log_id) >= ConfigInit.config_init().base_setting.log_size:
         OneDrive.delete_item(log_id)
-    original_content = OneDrive.get_content(item_path="E5KeepActive/E5KeepActive.log")
+
+    original_content = OneDrive.get_content(item_id=log_id)
+
     # 更新时间间隔 (单位:秒)
     period_min = int(ConfigInit.config_init().base_setting.call_func_period[0]) * 60
     period_max = int(ConfigInit.config_init().base_setting.call_func_period[1]) * 60
     period = random.randint(period_min, period_max)
+
     file_head = "This is E5KeepActive App detailed running time(the next to run about at {} {}):\n".format(
         datetime.now().strftime("%Y:%m:%d"),
-        (datetime.now() + timedelta(seconds=period)).strftime("%H:%M:%S"),
+        (datetime.now() + timedelta(seconds=period)).strftime("%H:%M"),
     )
+
     if original_content == "":
         new_content = "\tE5KeepActive App last run at {} {}\n".format(
             datetime.now().strftime("%Y:%m:%d"),
@@ -71,13 +72,12 @@ def call_onedrive_api():
         content = file_head + new_content + "\n".join(original_str_list[1:])
 
     # local log
-    log_folder = ROOT_PATH + r"\logs"
-    if not os.path.exists(log_folder):
-        os.makedirs(log_folder)
-    log_path = ROOT_PATH + r"\logs\log.log"
+    log_path = ROOT_PATH + r"\E5KeepActive.log"
+    # 创建文件
     if not os.path.exists(log_path):
         with open(log_path, "w"):
             pass
+    # 写入日志
     with open(log_path, "w") as file:
         file.write(content)
     # 控制台输出

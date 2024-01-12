@@ -11,16 +11,18 @@ redirect_uri = "http://localhost:2233/GetAuthorizationCode"
 # 使用默认值即可
 response_type = "code"
 response_mode = "query"
-scopes = ["offline_access", "Files.Read", "Files.Read.All",
-          "Files.ReadWrite", "Files.ReadWrite.All",
-          "Sites.Read.All", "Sites.ReadWrite.All"]
+scopes = ["offline_access", "Files.ReadWrite.All"]
 
 # 微软账号授权代码
 authorization_code = None
-# 多租户或个人账号令牌根节点
+# 多租户 或 个人账号令牌根节点
 access_token_url = "https://login.microsoftonline.com/common/oauth2/v2.0/token?"
 # 多租户或个人账号鉴权根节点
 access_authorize_url = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?"
+
+# todo 组织用户换取令牌
+# [参考](https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/grant-admin-consent?pivots=portal)
+
 # 授权令牌
 token = None
 
@@ -61,7 +63,6 @@ class Authorization:
             print("get access token...")
             global scopes
             authorization_code_body = {
-                "tenant": config.user_setting.tenant_id,
                 "client_id": config.user_setting.client_id,
                 "grant_type": "authorization_code",
                 "scope": scopes,
@@ -85,7 +86,6 @@ class Authorization:
         global token
         config = ConfigInit.config_init()
         refresh_token_body = {
-            "tenant": config.user_setting.tenant_id,
             "client_id": config.user_setting.client_id,
             "grant_type": "refresh_token",
             "refresh_token": token["refresh_token"],

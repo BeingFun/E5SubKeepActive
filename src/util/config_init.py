@@ -13,9 +13,10 @@ class UserSetting:
 
 
 class BasicSetting:
-    def __init__(self, start_with_sys, call_func_period):
+    def __init__(self, start_with_sys, call_func_period, log_size):
         self.start_with_sys = start_with_sys
         self.call_func_period = call_func_period
+        self.log_size = log_size
 
 
 class Setting:
@@ -49,10 +50,12 @@ class ConfigInit:
             .replace(" ", "")
             .split(",")
         )
+        log_size = dict_config["BASIC_SETTING"].getint("log_size")
 
         base_setting = BasicSetting(
             start_with_sys=start_with_sys,
             call_func_period=call_func_period,
+            log_size=log_size
         )
 
         tenant_id = dict_config["USER_SETTING"].get("tenant_id")
