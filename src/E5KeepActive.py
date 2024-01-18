@@ -29,7 +29,7 @@ def receive_redirect():
                 authorization.authorization_code = code
                 # 返回响应
                 return "已经正常接收到应用授权码，现在你可以关闭浏览器窗口了"
-            time.sleep(5)
+            time.sleep(1)
 
 
 def call_onedrive_api():
@@ -52,13 +52,13 @@ def call_onedrive_api():
     period = random.randint(period_min, period_max)
 
     file_head = "This is E5KeepActive App detailed running time(the next to run about at {} {}):\n".format(
-        datetime.now().strftime("%Y:%m:%d"),
+        datetime.now().strftime("%Y-%M-%D"),
         (datetime.now() + timedelta(seconds=period)).strftime("%H:%M"),
     )
 
     if original_content == "":
         new_content = "\tE5KeepActive App last run at {} {}\n".format(
-            datetime.now().strftime("%Y:%m:%d"),
+            datetime.now().strftime("%Y-%M-%D"),
             datetime.now().strftime("%H:%M:%S"),
 
         )
@@ -101,13 +101,13 @@ def call_onedrive_thread():
 
 
 if __name__ == '__main__':
-    # 启动 Flask 线程,用于接收 authorization_code
-    flask_thread = threading.Thread(target=app.run, kwargs={'port': 2233}, name="flask_thread")
-    flask_thread.start()
-
     # 启动 onedrive api 调用线程
     call_onedrive_thread = threading.Thread(target=call_onedrive_thread, name="call_onedrive_thread")
     call_onedrive_thread.start()
+
+    # 启动 Flask 线程,用于接收 authorization_code
+    flask_thread = threading.Thread(target=app.run(port=2233), name="flask_thread")
+    flask_thread.start()
 
     # 等待 call_onedrive_thread 线程结束
     call_onedrive_thread.join()

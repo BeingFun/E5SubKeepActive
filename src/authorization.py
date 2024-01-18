@@ -15,14 +15,12 @@ scopes = ["offline_access", "Files.ReadWrite.All"]
 
 # 微软账号授权代码
 authorization_code = None
-# 多租户 或 个人账号令牌根节点
-access_token_url = "https://login.microsoftonline.com/common/oauth2/v2.0/token?"
+# endpoints
+endpoints = "https://login.microsoftonline.com"
+# 多租户 或 个人账号令牌节点
+access_token_url = f"{endpoints}/common/oauth2/v2.0/token?"
 # 多租户或个人账号鉴权根节点
-access_authorize_url = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?"
-
-# todo 组织用户换取令牌
-# [参考](https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/grant-admin-consent?pivots=portal)
-
+access_authorize_url = f"{endpoints}/common/oauth2/v2.0/authorize?"
 # 授权令牌
 token = None
 
@@ -51,21 +49,20 @@ class Authorization:
                                 f"&client_id={config.user_setting.client_id}" \
                                 f"&response_type={response_type}" \
                                 f"&scope={Authorization.get_scope()}" \
-                                f"&response_mode={response_mode}" \
-                                f"&redirect_uri={redirect_uri}"
+                                f"&redirect_uri={redirect_uri}" \
+                                f"&response_mode={response_mode}"
             print(authorization_url)
             webbrowser.open_new(authorization_url)
             while True:
                 if authorization_code is not None:
                     break
-                time.sleep(5)
+                time.sleep(1)
             # step 1.2 用授权代码获取访问令牌
             print("get access token...")
-            global scopes
             authorization_code_body = {
                 "client_id": config.user_setting.client_id,
                 "grant_type": "authorization_code",
-                "scope": scopes,
+                "scope": scopes[1],
                 "code": authorization_code,
                 "redirect_uri": redirect_uri,
                 "client_secret": config.user_setting.client_secret,

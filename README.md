@@ -20,11 +20,12 @@
 
         # API调用时间间隔范围(两端包含), 单位：分钟
         call_func_period = [20,60]
+        
+        # E5KeepActive 程序运行记录 log 的缓存大小, 单位: MB
+        # 可选范围 [0, 250]
+        log_size = 10
 
     2.用户信息(包含的信息来自于你在Microsoft Entra 管理中心上注册的应用，如若不清楚可自行百度/Google)
-        # 租户ID (Directory (tenant) ID)  
-        tenant_id = xxxxxx
-
         # 客户端ID (Application (client) ID)
         client_id = xxxxxx
 

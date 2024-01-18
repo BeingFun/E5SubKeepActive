@@ -6,8 +6,7 @@ from src.constants.constants import ROOT_PATH
 
 
 class UserSetting:
-    def __init__(self, tenant_id, client_id, client_secret):
-        self.tenant_id = tenant_id
+    def __init__(self, client_id, client_secret):
         self.client_id = client_id
         self.client_secret = client_secret
 
@@ -58,14 +57,12 @@ class ConfigInit:
             log_size=log_size
         )
 
-        tenant_id = dict_config["USER_SETTING"].get("tenant_id")
         client_id = dict_config["USER_SETTING"].get("client_id")
         client_secret = dict_config["USER_SETTING"].get("client_secret")
 
         user_setting = UserSetting(
-            tenant_id=tenant_id,
             client_id=client_id,
-            client_secret=client_secret,
+            client_secret=client_secret
         )
 
         setting = Setting(base_setting=base_setting, user_setting=user_setting)

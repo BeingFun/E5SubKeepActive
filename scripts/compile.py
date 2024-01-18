@@ -13,12 +13,6 @@ if __name__ == "__main__":
     performable_path = ROOT_PATH + r"\bin"
     icon_file_path = ROOT_PATH + r"\resources\ico\E5KeepActive.ico"
     work_path = CUR_PATH + r"\E5KeepActive_build"
-    # 创建运行时需要的文件夹
-    new_folder = [ROOT_PATH + r"\logs"]
-
-    for folder in new_folder:
-        FileTools.delete_file_or_folder(folder)
-        os.mkdir(folder)
 
     # 设置编译参数和选项
     options = [
