@@ -2,16 +2,17 @@ import sys
 import os
 from PyInstaller.__main__ import run
 
-from src.constants.constants import ROOT_PATH
+from src.constants.constants import Constants
 from src.util.file_tools import FileTools
 
 CUR_PATH = os.path.dirname(os.path.abspath(__file__))
 VERSION = "release"
 
 if __name__ == "__main__":
-    program_path = ROOT_PATH + r"\src\E5KeepActive.py"
-    performable_path = ROOT_PATH + r"\bin"
-    icon_file_path = ROOT_PATH + r"\resources\ico\E5KeepActive.ico"
+    Constants.global_init()
+    program_path = Constants.get_value("root_path") + r"\src\main.py"
+    performable_path = Constants.get_value("root_path") + r"\bin"
+    icon_file_path = Constants.get_value("root_path") + r"\resources\ico\E5KeepActive.ico"
     work_path = CUR_PATH + r"\E5KeepActive_build"
 
     # 设置编译参数和选项

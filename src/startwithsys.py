@@ -1,10 +1,10 @@
 import winreg
 
-from src.constants.constants import ROOT_PATH
+from src.constants.constants import Constants
 from src.util.config_init import ConfigInit
 
 program_name = "E5KeepActive"
-program_path = ROOT_PATH + r"\bin\E5KeepActive.exe"
+program_path = Constants.get_value("root_path") + r"\bin\E5KeepActive.exe"
 program_para = "-hidden"
 value = ConfigInit.config_init().base_setting.start_with_sys
 

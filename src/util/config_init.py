@@ -1,8 +1,10 @@
 import configparser
 import json
 import os.path
+import random
 import chardet
-from src.constants.constants import ROOT_PATH
+
+from src.constants.constants import Constants
 
 
 class UserSetting:
@@ -30,7 +32,7 @@ class ConfigInit:
         print("start config init...")
         # Read the configuration file information
         config = configparser.ConfigParser(allow_no_value=False)
-        configfile = ROOT_PATH + "\\config\\config.ini"
+        configfile = Constants.get_value("root_path") + "\\config\\config.ini"
         with open(configfile, "rb") as file:
             content = file.read()
             encoding = chardet.detect(content)["encoding"]
@@ -42,13 +44,16 @@ class ConfigInit:
         dict_config = dict(config)
 
         start_with_sys = dict_config["BASIC_SETTING"].getboolean("start_with_system")
-        call_func_period = (
+        period_arr = (
             dict_config["BASIC_SETTING"]
             .get("call_func_period")
             .strip("[]")
             .replace(" ", "")
             .split(",")
         )
+        period_min = int(period_arr[0]) * 60
+        period_max = int(period_arr[1]) * 60
+        call_func_period = random.randint(period_min, period_max)
         log_size = dict_config["BASIC_SETTING"].getint("log_size")
 
         base_setting = BasicSetting(
@@ -71,7 +76,7 @@ class ConfigInit:
 
     @staticmethod
     def load_token():
-        token_path = ROOT_PATH + r"\config\token.json"
+        token_path = Constants.get_value("root_path") + r"\config\token.json"
         if not os.path.exists(token_path):
             with open(token_path, "w"):
                 pass
@@ -84,6 +89,6 @@ class ConfigInit:
 
     @staticmethod
     def dump_token(token: json):
-        token_path = ROOT_PATH + r"\config\token.json"
+        token_path = Constants.get_value("root_path") + r"\config\token.json"
         with open(token_path, "w") as file:
             json.dump(token, file)

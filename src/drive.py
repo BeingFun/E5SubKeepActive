@@ -1,13 +1,9 @@
-# 用户配置信息
 import json
 import time
-
 import requests
 
 from src.authorization import Authorization
-
-import authorization
-from src.util.config_init import ConfigInit
+from src.constants.constants import Constants
 
 # OneDrive 当前登录用户根节点
 onedrive_root = "https://graph.microsoft.com/v1.0/me/drive"
@@ -17,11 +13,10 @@ class OneDrive:
     # 根据 refresh_token 获取 access_token
     @staticmethod
     def get_header():
-        if time.time() > authorization.token["expires_time"]:
-            token = Authorization.renew_token()
-            ConfigInit.dump_token(token)
+        if time.time() > Constants.get_value("token")["expires_time"]:
+            Authorization.renew_token()
         header = {
-            "Authorization": "bearer " + authorization.token["access_token"]
+            "Authorization": "bearer " + Constants.get_value("token")["access_token"]
         }
         return header
 
@@ -53,7 +48,7 @@ class OneDrive:
         return False
 
     @staticmethod
-    def create_folder(item_path: str, foldername: str) -> bool:
+    def create_folder(item_path: str, foldername: str):
         """
         feature: 在父级目录 item_path 下创建文件夹 foldername
         :param item_path: 待创建文件夹的父级绝对路径
@@ -72,8 +67,7 @@ class OneDrive:
             header["Content-Type"] = "application/json"
             parent_id = OneDrive.get_item_id(item_path)
             url = onedrive_root + f"/items/{parent_id}/children"
-            response = requests.post(url=url, headers=header, data=data)
-            return response.ok
+            requests.post(url=url, headers=header, data=data)
         print(f"info: the folder {foldername} already exist in the {item_path}")
 
     @staticmethod
