@@ -4,7 +4,7 @@ from datetime import datetime
 
 class Log:
     @staticmethod
-    def save_log(file_path: str = r"../Error.log", content: str = ""):
+    def save_log(file_path: str = r"Error.log", content: str = ""):
         if not os.path.exists(file_path):
             with open(file_path, "w"):
                 pass
