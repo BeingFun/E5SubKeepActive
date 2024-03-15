@@ -67,7 +67,8 @@ class OneDrive:
             header["Content-Type"] = "application/json"
             parent_id = OneDrive.get_item_id(item_path)
             url = onedrive_root + f"/items/{parent_id}/children"
-            requests.post(url=url, headers=header, data=data)
+            response = requests.post(url=url, headers=header, data=data)
+            return response.ok
         print(f"info: the folder {foldername} already exist in the {item_path}")
 
     @staticmethod

@@ -15,16 +15,15 @@ else:
     _CUR_PATH = os.path.dirname(os.path.abspath(__file__))
     _CUR_PATH = os.path.dirname(_CUR_PATH)
 
-# 根目录
-_ROOT_PATH = os.path.dirname(_CUR_PATH)
-
 
 class Constants:
+    # 根目录
+    ROOT_PATH = os.path.dirname(_CUR_PATH)
 
     @staticmethod
     def global_init():
         global _global_dict
-        _global_dict = {"authorization_code": None, "root_path": _ROOT_PATH}
+        _global_dict = {"authorization_code": None, "root_path": Constants.ROOT_PATH}
 
     @staticmethod
     def set_value(key, value):

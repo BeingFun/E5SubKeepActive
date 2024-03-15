@@ -26,9 +26,9 @@ def call_onedrive_api():
     # 更新时间间隔 (单位:秒)
     period = ConfigInit.config_init().base_setting.call_func_period
 
-    file_head = "This is E5KeepActive App detailed running time(the next to run about at {} {}):\n".format(
+    file_head = "E5KeepActive App's detailed runtime record(the next to run about at {} {}):\n".format(
         datetime.now().strftime("%Y-%M-%d"),
-        (datetime.now() + timedelta(seconds=period)).strftime("%H:%M:%S"),
+        (datetime.now() + timedelta(seconds=period)).strftime("%H:%M"),
     )
 
     if original_content == "":
@@ -40,7 +40,7 @@ def call_onedrive_api():
         content = file_head + new_content
     else:
         new_content = "\tE5KeepActive App last run at {} {}\n".format(
-            datetime.now().strftime("%Y:%m:%d"),
+            datetime.now().strftime("%Y-%m-%d"),
             datetime.now().strftime("%H:%M:%S"),
         )
         original_str_list = original_content.split("\n")

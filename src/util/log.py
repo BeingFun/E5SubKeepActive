@@ -1,12 +1,15 @@
 import os
 from datetime import datetime
 
+from src.constants.constants import Constants
+
 
 class Log:
     @staticmethod
-    def save_log(file_path: str = r"../Error.log", content: str = ""):
+    def save_log(content: str = ""):
+        file_path = Constants.ROOT_PATH + r"\Error.log"
         if not os.path.exists(file_path):
-            with open(file_path, "w"):
+            with open(file_path, "x"):
                 pass
 
         with open(file_path, "a") as file:

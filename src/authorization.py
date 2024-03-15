@@ -18,14 +18,8 @@ scopes = ["Files.ReadWrite.All", "offline_access"]
 endpoints = "https://login.microsoftonline.com"
 # 多租户 或 个人账号令牌节点
 access_token_url = f"{endpoints}/common/oauth2/v2.0/token?"
-# 多租户或个人账号鉴权根节点
+# 多租户或个人账号鉴权节点
 access_authorize_url = f"{endpoints}/common/oauth2/v2.0/authorize?"
-
-
-# 微软账号授权代码
-# authorization_code
-# 授权令牌
-# token = None
 
 
 class Authorization:

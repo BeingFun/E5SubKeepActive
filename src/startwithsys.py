@@ -1,4 +1,9 @@
-import winreg
+import sys
+
+if sys.platform == 'win32':
+    import winreg as winreg
+elif sys.platform == 'cygwin':
+    import cygwinreg as winreg
 
 from src.constants.constants import Constants
 from src.util.config_init import ConfigInit
