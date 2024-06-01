@@ -27,7 +27,7 @@ def call_onedrive_api():
     period = ConfigInit.config_init().base_setting.call_func_period
 
     file_head = "E5KeepActive App's detailed runtime record(the next to run about at {} {}):\n".format(
-        datetime.now().strftime("%Y-%M-%d"),
+        datetime.now().strftime("%Y-%m-%d"),
         (datetime.now() + timedelta(seconds=period)).strftime("%H:%M"),
     )
 
