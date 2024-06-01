@@ -11,10 +11,13 @@ jobs:
   run-onedrive-api:
     runs-on: ubuntu-latest
     steps:
+      - name: Set timezone
+        uses: WitherZuo/set-timezone@v1.0.0
+        with:
+          timezoneLinux: 'Asia/Shanghai'
+
       - name: Checkout code # 拉取代码
         uses: actions/checkout@v4
-        with:
-          timezoneLinux: "Asia/Shanghai"
 
       - name: Set up python # 安装指定版本python
         uses: actions/setup-python@v4
