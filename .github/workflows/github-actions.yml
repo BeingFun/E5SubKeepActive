@@ -1,0 +1,35 @@
+name:
+  E5 AutoActive
+run-name:
+  E5 AutoActive Online
+on:
+  schedule: # 仅在工作日的8点、9点...15点的第0分钟运行
+    - cron: '0 16-23 * * 1-5'
+  workflow_dispatch: # 手动运行
+
+jobs:
+  run-onedrive-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code # 拉取代码
+        uses: actions/checkout@v4
+        with:
+          timezoneLinux: "Asia/Shanghai"
+
+      - name: Set up python # 安装指定版本python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install requirements.txt # 安装依赖
+        run: pip install -r requirements.txt
+
+      - name: Add pythonpath # 添加python path
+        run: echo "PYTHONPATH=${{ github.workspace }}" >> $GITHUB_ENV
+
+      - name: Run github_action.py # 运行脚本
+        run: python scripts/github_action.py
+        env:
+          TOKEN: ${{ secrets.TOKEN }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
