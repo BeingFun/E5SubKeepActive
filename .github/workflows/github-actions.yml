@@ -3,8 +3,8 @@ name:
 run-name:
   E5 AutoActive Online
 on:
-  schedule: # 仅在工作日的8点、9点...15点的第0分钟运行
-    - cron: '0 16-23 * * 1-5'
+  schedule: # 仅在工作日的8点、9点...17点的第0分钟运行
+    - cron: '0 0-9 * * 1-5'
   workflow_dispatch: # 手动运行
 
 jobs:
