@@ -1,0 +1,93 @@
+name: "[Single] Build Windows NSIS"
+
+on:
+  workflow_dispatch: # 手动运行
+    inputs:
+      portable:      # 是否发布便携版本
+        description: "Build Windows Portable"
+        required: true
+        type: boolean
+        default: true
+      tag:
+        description: "Release Tag"
+        required: true
+        type: string
+      releaseName:
+        description: "Release Name"
+        required: true
+        type: string
+        default: "E5KeepActive Dev"
+      releaseBody:
+        description: "Release Body"
+        required: true
+        type: string
+        default: "More new features are now supported."
+
+  workflow_call:
+    inputs:
+      portable:      # 是否发布便携版本
+        description: "Build Windows Portable"
+        required: true
+        type: boolean
+        default: true
+      tag:
+        description: "Release Tag"
+        required: true
+        type: string
+      releaseName:
+        description: "Release Name"
+        required: true
+        type: string
+        default: "E5KeepActive Dev"
+      releaseBody:
+        description: "Release Body"
+        required: true
+        type: string
+        default: "More new features are now supported."
+
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Create Release ID
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          prerelease: true
+          tag_name: ${{ inputs.tag }}
+          release_name: ${{ inputs.releaseName }}
+          body: ${{ inputs.releaseBody }}
+
+      - name: Checkout Repository # 拉取代码
+        uses: actions/checkout@v4
+
+      - name: Set Up Python # 安装指定版本python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install requirements.txt # 安装依赖
+        run: pip install -r requirements.txt
+
+      - name: Add Python Path ENV # 添加 python path
+        run: echo "PYTHONPATH=${{ github.workspace }}" >> $GITHUB_ENV
+
+      - name: Portable Bundle # 运行编译脚本
+        if: ${{ inputs.portable == true }}
+        run: |
+          python scripts/compile.py
+          python scripts/deploy.py
+
+      - name: Upload Release Asset # 上传资产
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./E5KeepActive.zip
+          asset_name: E5KeepActive.zip
+          asset_content_type: application/zip

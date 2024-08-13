@@ -2,6 +2,8 @@ import sys
 import os
 from PyInstaller.__main__ import run
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from src.constants.constants import Constants
 from src.util.file_tools import FileTools
 
