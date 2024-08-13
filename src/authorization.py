@@ -72,7 +72,7 @@ class Authorization:
                 "redirect_uri": redirect_uri,
                 "client_secret": config.user_setting.client_secret,
             }
-            token = requests.post(access_token_url, data=authorization_code_body, proxies={}).json()
+            token = requests.post(access_token_url, data=authorization_code_body, proxies={"http": None, "https": None}).json()
             token["expires_time"] = time.time() + token["expires_in"] - 20
             Constants.set_value("token", token)
             ConfigInit.dump_token(token)
@@ -93,7 +93,7 @@ class Authorization:
             "refresh_token": token["refresh_token"],
             "client_secret": config.user_setting.client_secret,
         }
-        new_token = requests.post(access_token_url, data=refresh_token_body, proxies={}).json()
+        new_token = requests.post(access_token_url, data=refresh_token_body, proxies={"http": None, "https": None}).json()
         new_token["expires_time"] = time.time() + new_token["expires_in"] - 20
         Constants.set_value("token", new_token)
         ConfigInit.dump_token(new_token)

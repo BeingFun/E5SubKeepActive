@@ -28,7 +28,7 @@ class OneDrive:
         :return: 文件夹或文件的 item_id
         """
         url = onedrive_root + f"/{item_path}"
-        response = requests.get(url=url, headers=OneDrive.get_header(), proxies={}).json()
+        response = requests.get(url=url, headers=OneDrive.get_header(), proxies={"http": None, "https": None}).json()
         return response["id"]
 
     @staticmethod
@@ -41,7 +41,7 @@ class OneDrive:
         """
         item_id = OneDrive.get_item_id(item_path=item_path)
         url = onedrive_root + f"/items/{item_id}/children"
-        response = requests.get(url=url, headers=OneDrive.get_header(), proxies={}).json()
+        response = requests.get(url=url, headers=OneDrive.get_header(), proxies={"http": None, "https": None}).json()
         for item in response["value"]:
             if filename == item["name"]:
                 return True
@@ -67,7 +67,7 @@ class OneDrive:
             header["Content-Type"] = "application/json"
             parent_id = OneDrive.get_item_id(item_path)
             url = onedrive_root + f"/items/{parent_id}/children"
-            response = requests.post(url=url, headers=header, data=data, proxies={})
+            response = requests.post(url=url, headers=header, data=data, proxies={"http": None, "https": None})
             return response.ok
         print(f"info: the folder {foldername} already exist in the {item_path}")
 
@@ -85,7 +85,7 @@ class OneDrive:
             header["Content-Type"] = "text/plain"
             parent_id = OneDrive.get_item_id(item_path)
             url = onedrive_root + f"/items/{parent_id}:/{filename}:/content"
-            response = requests.put(url=url, headers=header, data=data, proxies={})
+            response = requests.put(url=url, headers=header, data=data, proxies={"http": None, "https": None})
             return response.ok
         print(f"info: the file {filename} already exist in the {item_path}")
 
@@ -97,7 +97,7 @@ class OneDrive:
         :return: file content
         """
         url = onedrive_root + f"/items/{item_id}/content"
-        response = requests.get(url=url, headers=OneDrive.get_header(), proxies={})
+        response = requests.get(url=url, headers=OneDrive.get_header(), proxies={"http": None, "https": None})
         return response.text
 
     @staticmethod
@@ -112,7 +112,7 @@ class OneDrive:
         data = content.encode("utf-8")
         header = OneDrive.get_header()
         header["Content-Type"] = "text/plain"
-        response = requests.put(url=url, headers=header, data=data, proxies={})
+        response = requests.put(url=url, headers=header, data=data, proxies={"http": None, "https": None})
         return response.ok
 
     @staticmethod
@@ -123,7 +123,7 @@ class OneDrive:
         :return: file size (MB)
         """
         url = onedrive_root + f"/items/{item_id}"
-        response = requests.get(url=url, headers=OneDrive.get_header(), proxies={}).json()
+        response = requests.get(url=url, headers=OneDrive.get_header(), proxies={"http": None, "https": None}).json()
         return response["size"] / 1024 / 1024
 
     @staticmethod
@@ -134,5 +134,5 @@ class OneDrive:
         :return: False or True
         """
         url = onedrive_root + f"/items/{item_id}"
-        response = requests.delete(url=url, headers=OneDrive.get_header(), proxies={})
+        response = requests.delete(url=url, headers=OneDrive.get_header(), proxies={"http": None, "https": None})
         return response.ok
