@@ -37,8 +37,12 @@ class Authorization:
     def init():
         print("start authorization init...")
         config = ConfigInit.config_init()
-        ENV_TOKEN = json.loads(os.environ.get("TOKEN"))
-        token = ConfigInit.load_token() or ENV_TOKEN
+        ENV_TOKEN = None
+        try:
+            ENV_TOKEN = json.loads(os.environ.get("TOKEN"))
+        except Exception as e:
+            pass
+        token = ENV_TOKEN or ConfigInit.load_token()
         Constants.set_value("token", token)
         # 如果刷新令牌为空，则重新登录获取令牌
         if token is None:
