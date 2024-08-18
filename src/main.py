@@ -1,5 +1,6 @@
 import time
 from retrying import retry
+from psutil import  boot_time
 
 from src.excepthread import ExcThread
 from src.server import local_serve
@@ -34,6 +35,9 @@ if __name__ == '__main__':
     feature: 轮询各个子线程的状态，如果有子线程失败就结束主线程 
     从而有一个子线程异常时，主线程结束，导致所有子线程(已经全部设置为守护线程)退出
     """
+    bootTime = (time.time() - boot_time())
+    if bootTime < 300:
+        time.sleep(300) # 临时修复开机时配置了系统代理但代理软件未完成启动场景的联网问题
     thread_list = start_child_thread()
     while True:
         for task in thread_list:
